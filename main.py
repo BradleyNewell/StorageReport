@@ -15,7 +15,7 @@ class StorageReport:
         self.total, self.used, self.free = shutil.disk_usage(drive_path)
         self.formatted_used = self.used // (2**30)
         self.formatted_free = self.free // (2**30)
-        self.disc_values = [self.formatted_used, self.formatted_free]
+        self.drive_values = [self.formatted_used, self.formatted_free]
 
     def show_disc_info(self):
         print(f"Total: {self.total // (2**30)} gb on drive: {str(self.drive_path)}")
@@ -31,22 +31,26 @@ class StorageReport:
             return f'{pct:.2f}% ({val:d}gb)'
         return make_autopct
 
+# Method to format matplotlib pie chart to display drive information
     def display_disc_graph(self):
         colours = ['#ff9999', '#99ff99']
-        disc_info = 'Used', 'Free'
+        drive_labels = 'Used', 'Free'
         explode_pie = (0.05, 0.05)
-        plt.pie(self.disc_values,
-                autopct=self.generate_autopct(self.disc_values),
+        fig = plt.figure()
+        fig.canvas.manager.set_window_title("StorageReport")
+        plt.pie(self.drive_values,
+                autopct=self.generate_autopct(self.drive_values),
                 colors=colours,
                 pctdistance=0.85,
                 explode=explode_pie,
                 shadow=True
                 )
-        plt.legend(disc_info, loc="best")
+
+        plt.legend(drive_labels, loc="best")
+
         plt.show()
 
 
-
-x = StorageReport("C:")
+x = StorageReport("F:")
 x.show_disc_info()
 x.display_disc_graph()
